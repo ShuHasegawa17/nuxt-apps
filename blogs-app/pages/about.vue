@@ -1,10 +1,7 @@
 <script setup lang="ts">
-// definePageMeta({
-//   layout: 'another',
-// });
-// function enableCustomLayout() {
-//   setPageLayout('another');
-// }
+useHead({
+  title: 'About',
+});
 </script>
 <template>
   <div>about</div>
