@@ -2,7 +2,7 @@
 const { error, pending, data } = await useFetch<any>(
   'https://api.github.com/users/ShuHasegawa17/repos'
 );
-console.log(data.value);
+// console.log(data.value);
 const repos = computed(() =>
   data.value
     //.filter((repo: { description: any }) => repo.description)

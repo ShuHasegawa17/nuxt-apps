@@ -1,0 +1,41 @@
+<template>
+  <div class="flex space-x-2 items-center">
+    <div class="text-gray500 text-xs" v-if="showNextModelLabel">
+      change to {{ nextMode }}
+    </div>
+    <button
+      @click="toggleMode"
+      @mouseenter="showNextModelLabel = true"
+      @mouseleave="showNextModelLabel = false"
+      class="hover:bg-gray-100 dark:hover:bg-gray-600 px-2 py-1 text-gray-500"
+    >
+      {{ nextModeIcon }}
+    </button>
+  </div>
+</template>
+<script setup lang="ts">
+const showNextModelLabel = ref(false);
+const colorMode = useColorMode();
+
+const modes = ['system', 'light', 'dark'];
+
+const nextModeIcons = {
+  system: '🌓',
+  light: '🌕',
+  dark: '🌑',
+} as { [key: string]: string };
+
+const nextMode = computed(() => {
+  const currentModeIndex = modes.indexOf(colorMode.preference);
+  let nextModeIndex = null;
+  if (currentModeIndex + 1 === modes.length) {
+    nextModeIndex = 0;
+  } else {
+    nextModeIndex = currentModeIndex + 1;
+  }
+  return modes[nextModeIndex];
+});
+
+const nextModeIcon = computed(() => nextModeIcons[nextMode.value]);
+const toggleMode = () => (colorMode.preference = nextMode.value);
+</script>
