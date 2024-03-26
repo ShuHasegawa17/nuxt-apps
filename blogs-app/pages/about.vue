@@ -1,11 +1,5 @@
-<script setup lang="ts">
-useHead({
-  title: 'About',
-});
-</script>
 <template>
-  <div>about</div>
-  <!-- <div>
-    <button @click="enableCustomLayout">Update layout</button>
-  </div> -->
+  <article class="prose dark:prose-invert prose-h1:text-2xl">
+    <ContentDoc path="/about" />
+  </article>
 </template>
