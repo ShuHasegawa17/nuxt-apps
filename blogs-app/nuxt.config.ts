@@ -19,4 +19,9 @@ export default defineNuxtConfig({
   colorMode: {
     classSuffix: '',
   },
+  nitro: {
+    prerender: {
+      routes: ['/sitemap.xml'],
+    },
+  },
 });
