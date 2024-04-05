@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@nuxt/content": "^2.12.1",
+    "@vercel/speed-insights": "^1.0.10",
     "nuxt": "^3.11.1",
     "sass": "^1.72.0",
     "sitemap": "^7.1.1",

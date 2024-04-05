@@ -17,11 +17,13 @@
       </ClientOnly>
     </header>
     <main class="p-2 mt-10">
+      <SpeedInsights />
       <slot />
     </main>
   </div>
 </template>
 <script setup lang="ts">
+import { SpeedInsights } from '@vercel/speed-insights/nuxt';
 useHead({
   titleTemplate: '%s - Shu Hasegawa',
   link: [
