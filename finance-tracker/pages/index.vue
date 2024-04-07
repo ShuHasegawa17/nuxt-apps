@@ -23,6 +23,12 @@
     />
     <Trend title="Saving" :amount="4000" :last-amount="3000" :loading="false" />
   </section>
+  <section>
+    <Transaction />
+    <Transaction />
+    <Transaction />
+    <Transaction />
+  </section>
 </template>
 <script setup lang="ts">
 import { transactionViewOptions } from '~/constants';
