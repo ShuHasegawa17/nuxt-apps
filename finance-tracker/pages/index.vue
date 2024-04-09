@@ -24,13 +24,27 @@
     <Trend title="Saving" :amount="4000" :last-amount="3000" :loading="false" />
   </section>
   <section>
-    <Transaction />
-    <Transaction />
-    <Transaction />
-    <Transaction />
+    <Transaction
+      v-for="transaction in transactions"
+      :key="transaction.id"
+      :transaction="transaction"
+    />
   </section>
 </template>
 <script setup lang="ts">
 import { transactionViewOptions } from '~/constants';
 const viewSelected = ref(transactionViewOptions[1]);
+
+const supabase = useSupabaseClient();
+const transactions = ref<any>([]);
+
+const { data, pending } = await useAsyncData('transactions', async () => {
+  const { data, error } = await supabase.from('transactions').select();
+  if (error) return [];
+  return data;
+});
+
+console.log(data);
+
+transactions.value = data.value;
 </script>
