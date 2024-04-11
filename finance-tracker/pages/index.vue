@@ -24,11 +24,20 @@
     <Trend title="Saving" :amount="4000" :last-amount="3000" :loading="false" />
   </section>
   <section>
-    <Transaction
-      v-for="transaction in transactions"
-      :key="transaction.id"
-      :transaction="transaction"
-    />
+    <div
+      v-for="(transactionOnDay, date) in transactionGroupedByDate"
+      :key="date"
+    >
+      <DailyTransactionSummay
+        :date="date + ''"
+        :transactions="transactionOnDay"
+      />
+      <Transaction
+        v-for="transaction in transactionOnDay"
+        :key="transaction.id"
+        :transaction="transaction"
+      />
+    </div>
   </section>
 </template>
 <script setup lang="ts">
@@ -44,7 +53,19 @@ const { data, pending } = await useAsyncData('transactions', async () => {
   return data;
 });
 
-console.log(data);
-
 transactions.value = data.value;
+
+const transactionGroupedByDate = computed(() => {
+  let grouped: any = {};
+  for (const transaction of transactions.value) {
+    const date = new Date(transaction.created_at).toISOString().split('T')[0];
+    if (!grouped[date]) {
+      grouped[date] = [];
+    }
+    grouped[date].push(transaction);
+  }
+  return grouped;
+});
+
+console.log(transactionGroupedByDate.value);
 </script>
