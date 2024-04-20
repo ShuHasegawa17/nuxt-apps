@@ -2,7 +2,7 @@
   <UCard v-if="!success">
     <template #header> Sigin in to Finance Tracker </template>
 
-    <form>
+    <form @submit.prevent="handleLogin">
       <UFormGroup
         label="Email"
         name="email"
@@ -10,13 +10,14 @@
         :required="true"
         help="you will recive an email with the confirmation link"
       >
-        <UInput type="email" placeholder="Email" required />
+        <UInput type="email" placeholder="Email" required v-model="email" />
       </UFormGroup>
       <UButton
         type="submit"
         variant="solid"
         color="black"
-        @click="success = true"
+        :loading="pending"
+        :disabled="pending"
         >Sign-in</UButton
       >
     </form>
@@ -25,8 +26,8 @@
     <template #header> Email has been sent </template>
     <div class="text-center">
       <p class="mb-4">
-        We have sent an email to <strong>shuhasegawa0430@gmail.com</strong> with
-        a link to sign-in
+        We have sent an email to <strong>{{ email }}</strong> with a link to
+        sign-in
       </p>
       <p><strong>Important:</strong>The link will expire in 5 minutes</p>
     </div>
@@ -34,4 +35,35 @@
 </template>
 <script setup lang="ts">
 const success = ref(false);
+const email = ref('');
+const pending = ref(false);
+const toast = useToast();
+const supabase = useSupabaseClient();
+
+useRedirectIfAuthenticated();
+
+const handleLogin = async () => {
+  pending.value = true;
+  try {
+    console.log('handle!!');
+    const { error } = await supabase.auth.signInWithOtp({
+      email: email.value,
+      options: {
+        emailRedirectTo: 'http://localhost:3000/confirm',
+      },
+    });
+    if (error) {
+      toast.add({
+        title: 'Error authenticating',
+        icon: 'i-heroicons-exlamation-circle',
+        description: error.message,
+        color: 'red',
+      });
+    } else {
+      success.value = true;
+    }
+  } finally {
+    pending.value = false;
+  }
+};
 </script>
