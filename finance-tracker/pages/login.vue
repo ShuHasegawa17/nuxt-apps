@@ -45,7 +45,6 @@ useRedirectIfAuthenticated();
 const handleLogin = async () => {
   pending.value = true;
   try {
-    console.log('handle!!');
     const { error } = await supabase.auth.signInWithOtp({
       email: email.value,
       options: {
