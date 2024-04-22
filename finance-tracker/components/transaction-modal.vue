@@ -76,6 +76,7 @@
 <script setup lang="ts">
 import { categories, types } from '~/constants';
 import { z } from 'zod';
+import { useAppToast } from '~/composables/useAppToast';
 // defineProps<{
 //   isOpen: boolean;
 // }>();
@@ -119,7 +120,7 @@ const schema = z.intersection(
 const form = ref();
 const isLoading = ref(false);
 const supabase = useSupabaseClient();
-const toast = useToast();
+const { toastSuccess, toastError } = useAppToast();
 const save = async () => {
   // await form.value.validate();
   if (form.value.errors.length) return;
@@ -129,9 +130,8 @@ const save = async () => {
       .from('transactions')
       .upsert({ ...(state.value as any) });
     if (!error) {
-      toast.add({
+      toastSuccess({
         title: 'Transaction saved',
-        icon: 'i-heroicons-check-circle',
       });
       isOpen.value = false;
       emit('saved');
@@ -139,11 +139,9 @@ const save = async () => {
     }
     throw error;
   } catch (e: any) {
-    toast.add({
+    toastError({
       title: 'Transaction not saved',
       description: e.message,
-      icon: 'i-heroicons-exclamation-circle',
-      color: 'red',
     });
   } finally {
     isLoading.value = false;

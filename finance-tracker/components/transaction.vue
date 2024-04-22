@@ -29,6 +29,8 @@
   </div>
 </template>
 <script setup lang="ts">
+import { useAppToast } from '~/composables/useAppToast';
+
 const props = defineProps({
   transaction: { type: Object, required: true },
 });
@@ -47,7 +49,7 @@ const iconColor = computed(() =>
 const { currency } = useCurrency(props.transaction.amount);
 
 const isLoading = ref(false);
-const toast = useToast();
+const { toastSuccess, toastError } = useAppToast();
 const supabase = useSupabaseClient();
 
 const deleteTransction = async () => {
@@ -55,17 +57,13 @@ const deleteTransction = async () => {
 
   try {
     await supabase.from('transactions').delete().eq('id', props.transaction.id);
-    toast.add({
+    toastSuccess({
       title: 'Transaction deleted',
-      icon: 'i-heroicons-check-circle',
-      color: 'green',
     });
     emit('deleted', props.transaction.id);
   } catch (error) {
-    toast.add({
+    toastError({
       title: 'Transaction deleted',
-      icon: 'i-heroicons-exclamation-circle',
-      color: 'red',
     });
   } finally {
     isLoading.value = false;
