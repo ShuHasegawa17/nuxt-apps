@@ -73,11 +73,15 @@
 </template>
 <script setup lang="ts">
 import { transactionViewOptions } from '~/constants';
-const viewSelected = ref(transactionViewOptions[1]);
+
+const user = useSupabaseUser();
+
+const viewSelected = ref(
+  user.value?.user_metadata?.transaction_view ?? transactionViewOptions[1]
+);
 const isOpen = ref(false);
 
 const { current, previous } = useSelectedTimePeriod(viewSelected);
-
 const {
   pending,
   refresh,
@@ -89,7 +93,6 @@ const {
     grouped: { byDate },
   },
 } = useFetchTransactions(current);
-// await refresh();
 
 const {
   refresh: refreshPrevious,
@@ -98,5 +101,7 @@ const {
     expenseTotal: prevExpenseTotal,
   },
 } = useFetchTransactions(previous);
+
+await refresh();
 await refreshPrevious();
 </script>
